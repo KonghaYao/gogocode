@@ -1,6 +1,6 @@
-const recast = require('recast-yx');
+const recast = require('recast');
 const babelParse = require('@babel/parser');
-module.exports = function(code, options) {
+module.exports = function (code, options) {
     options = options || global.parseOptions;
     let plugins = ((options && options.plugins) ? options.plugins : [])
         .concat([
@@ -25,11 +25,11 @@ module.exports = function(code, options) {
             'optionalCatchBinding',
             'optionalChaining',
             'partialApplication',
-            ['pipelineOperator', {'proposal': "smart"}],
+            ['pipelineOperator', { 'proposal': "smart" }],
             'throwExpressions',
             'topLevelAwait',
-            'decorators-legacy', 
-            ['@babel/plugin-syntax-decorators','decorators', { decoratorsBeforeExport: true }]
+            'decorators-legacy',
+            ['@babel/plugin-syntax-decorators', 'decorators', { decoratorsBeforeExport: true }]
         ]);
     const parseOptions = {
         // sourceType: 'module',
@@ -50,8 +50,8 @@ module.exports = function(code, options) {
             parse(code) {
                 try {
                     try {
-                        return babelParse.parse(code, parseOptions);   
-                    } catch(e) {
+                        return babelParse.parse(code, parseOptions);
+                    } catch (e) {
                         // 是否存在jsx可能导致parse报错，所以在此兼容
                         if (parseOptions.plugins) {
                             const jsxIndex = parseOptions.plugins.indexOf('jsx');
@@ -63,7 +63,7 @@ module.exports = function(code, options) {
                         }
                         return babelParse.parse(code, parseOptions);
                     }
-                } catch(e) {
+                } catch (e) {
                     throw Error(e.message)
                 }
             }

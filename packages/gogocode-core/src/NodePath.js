@@ -1,6 +1,6 @@
-const recast = require('recast-yx');
+const recast = require('recast');
 const visit = recast.types.visit;
-module.exports =  class NodePath {
+module.exports = class NodePath {
     constructor(node, parent, parentPath) {
         if (!parent && !parentPath && node.program) {
             const nodePath = this;

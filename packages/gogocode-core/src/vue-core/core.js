@@ -52,7 +52,7 @@ const core = {
             return undefined;
         }
     },
-    getScript(ast, { isSetup = false, parseOptions } = {} ) {
+    getScript(ast, { isSetup = false, parseOptions } = {}) {
         // 仅针对vue，取script，后续通过jscore处理
         let content;
         if (isSetup && ast.scriptSetup) {
@@ -89,7 +89,7 @@ const core = {
             } else {
                 return null;
             }
-        } catch(e) {
+        } catch (e) {
             console.log('buildAstByAstStr failed:' + e)
         }
     }

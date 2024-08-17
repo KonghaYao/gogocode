@@ -9,15 +9,15 @@ const filterProp = require('./js-core/filter-prop')
 const { isObject } = require('./util')
 
 const languageMap = {
-    'js': { 
+    'js': {
         generate,
         core
     },
-    'html': { 
+    'html': {
         generate: htmlGenerate,
         core: htmlCore
     },
-    'vue': { 
+    'vue': {
         generate: vueGenerate,
         core: vueCore
     }
@@ -31,7 +31,7 @@ class AST {
             }
         }
         this.rootNode = rootNode;
-        this.expando = 'g' + ('' + Math.random()).replace( /\D/g, "" ) + 'g';
+        this.expando = 'g' + ('' + Math.random()).replace(/\D/g, "") + 'g';
         this.parseOptions = parseOptions;
     }
     get node() {
@@ -59,7 +59,7 @@ class AST {
     }
     get length() {
         let i = 0;
-        while(this[i]) {
+        while (this[i]) {
             i++
         }
         return i;
@@ -69,7 +69,7 @@ class AST {
         const newAST = cloneAST(this)
         while (this[i]) {
             const { nodePath, match } = this[i]
-            const eachNode = new AST(nodePath, { parseOptions: this.parseOptions, match, rootNode: this.rootNode})
+            const eachNode = new AST(nodePath, { parseOptions: this.parseOptions, match, rootNode: this.rootNode })
             callback(eachNode, i);
             newAST[i] = eachNode[0] || null
             i++;
@@ -88,7 +88,7 @@ class AST {
         //     throw new Error('find failed! Nodepath is null!');
         // }
         const pOptions = options.parseOptions || this.parseOptions;
-        const {nodePathList, matchWildCardList, extra = {} } = this.core.getAstsBySelector(
+        const { nodePathList, matchWildCardList, extra = {} } = this.core.getAstsBySelector(
             nodePath.node,
             selector, {
                 strictSequence: options.ignoreSequence === false,
@@ -105,7 +105,7 @@ class AST {
             // 把this里的parentPath接到nodePath上
             if (this.language == 'js') {
                 let theNodePath = nodePath;
-                while(theNodePath.parentPath) {
+                while (theNodePath.parentPath) {
                     if (theNodePath.parentPath && theNodePath.parentPath.name == 'root') {
                         if (theNodePath.parentPath.node.type != 'File') {
                             theNodePath.parentPath = this[0].nodePath;
@@ -135,7 +135,7 @@ class AST {
         // }
 
         let parent = [this[0].parentList[level]]
-        function parentMatch (full, partial) {
+        function parentMatch(full, partial) {
             return Object.keys(partial).every(prop => {
                 if (!full || !partial) return false
                 if (!full[prop]) return false;
@@ -155,7 +155,7 @@ class AST {
                 }
             })
         }
-        
+
         const newAST = cloneAST(this)
         if (parent[0]) {
             parent.forEach((p, i) => {
@@ -194,8 +194,8 @@ class AST {
                 newAST[0] = { nodePath: this.rootNode.node.scriptAst }
             } else {
                 newAST.parseOptions = Object.assign(
-                    {}, 
-                    this.parseOptions, 
+                    {},
+                    this.parseOptions,
                     { language: 'vue', rootLanguage: undefined });
             }
         }
@@ -351,9 +351,9 @@ class AST {
             resetParent(newNode);
             resetParent(this[0].nodePath.node);
             nodePath = new NodePath(
-                newNode, 
-                this[0].nodePath.parent, 
-                this[0].nodePath.parentPath 
+                newNode,
+                this[0].nodePath.parent,
+                this[0].nodePath.parentPath
             )
             function resetParent(node) {
                 for (let key in node) {
@@ -386,7 +386,7 @@ class AST {
                     }
                 }
             }
-            
+
         } else {
             const node = {};
             // js需要做一层属性过滤，否则会有环形依赖
@@ -402,8 +402,8 @@ class AST {
             ]);
             nodePath = new NodePath(
                 // JSON.parse(JSON.stringify(this[0].nodePath.node)), 
-                JSON.parse(JSON.stringify(node)), 
-                this[0].nodePath.parent, 
+                JSON.parse(JSON.stringify(node)),
+                this[0].nodePath.parent,
                 this[0].nodePath.parentPath
             )
         }
@@ -435,11 +435,11 @@ class AST {
             replacer = replacer.program.body[0]
         }
         let i = 0;
-        while(this[i]) {
+        while (this[i]) {
             this.core.replaceAstByAst(this[i].nodePath, replacer, this._index)
             i++
         }
-        
+
         return this;
     }
     insertSiblingNode(node, type) {
@@ -459,8 +459,8 @@ class AST {
             node.trailing = type == 'after';
             node.leading = type == 'before';
             this.insertChildNode(
-                'comments', 
-                node, 
+                'comments',
+                node,
                 type == 'after' ? 'append' : 'prepend')
             return;
         }
@@ -502,7 +502,7 @@ class AST {
             let i = 0;
             let selfPathNode = this[0].nodePath.value;
             let selfIndex = -1;
-            while(!getArrayParent) {
+            while (!getArrayParent) {
                 if (!parentList[i] || !parentList[i].value) {
                     getArrayParent = true;
                 } else if (Array.isArray(parentList[i].value)) {
@@ -612,7 +612,7 @@ class AST {
                     selfNode = selfNode.body
                 }
             }
-            
+
         }
 
         if (node.type == 'File' && node.program.body) {
@@ -700,21 +700,21 @@ class AST {
         if (typeof selector == 'string' || Array.isArray(selector)) {
             const pOptions = options.parseOptions || this.parseOptions;
             let i = 0;
-            while(this[i]) {
-                this.core.removeAst(this.node, selector, { 
-                    strictSequence: options.ignoreSequence === false, 
-                    parseOptions: pOptions, 
+            while (this[i]) {
+                this.core.removeAst(this.node, selector, {
+                    strictSequence: options.ignoreSequence === false,
+                    parseOptions: pOptions,
                     expando: this.expando
                 });
                 i++
             }
         } else {
             let i = 0;
-            while(this[i]) {
+            while (this[i]) {
                 this.core.remove(this[i].nodePath)
                 i++
             }
-            
+
         }
         return this.root()
     }
@@ -731,7 +731,7 @@ class AST {
 }
 
 function cloneAST(ast) {
-    const newAST = new AST('', { parseOptions: ast.parseOptions, rootNode: ast.rootNode})
+    const newAST = new AST('', { parseOptions: ast.parseOptions, rootNode: ast.rootNode })
     if (ast.sfc) {
         newAST.sfc = ast.sfc
     }
@@ -757,10 +757,10 @@ function getAttrValue(node, attr) {
 
 function initParent(ast) {
     if (ast.isHtml) {
-        ast[0].parentList =  ast.core.getParentListByAst(ast[0].nodePath)
+        ast[0].parentList = ast.core.getParentListByAst(ast[0].nodePath)
         ast[0]._index = ast[0].parentList[0] ? ast[0].parentList[0].node.content.children.indexOf(ast[0].nodePath.node) : 0;
     } else {
-        ast[0].parentList =  core.getParentListByAst(ast[0].nodePath)
+        ast[0].parentList = core.getParentListByAst(ast[0].nodePath)
     }
     return ast[0].parentList
 }
@@ -775,7 +775,7 @@ function initSiblings(ast) {
                 parseOptions: ast.parseOptions
             }
         });
-        
+
         ast[0].siblings = siblings;
         ast[0].prevAll = siblings.filter(s => s._index < ast._index);
         ast[0].nextAll = siblings.filter(s => s._index > ast._index);
@@ -791,7 +791,7 @@ function initSiblings(ast) {
         const prevAll = [];
         const nextAll = [];
         let selfPathNode = ast[0].nodePath.value;
-        while(!getArrayParent) {
+        while (!getArrayParent) {
             if (!parentList[i] || !parentList[i].value) {
                 getArrayParent = true;
             } else if (Array.isArray(parentList[i].value)) {
@@ -820,10 +820,10 @@ function initSiblings(ast) {
             selfPathNode = parentList[i].value;
             i++
         }
-    }   
+    }
 }
 function setAttrValue(node, attrMap) {
-    for(const key in attrMap) {
+    for (const key in attrMap) {
         const value = attrMap[key];
         const keyList = key.split('.');
         let currentNode = node;
@@ -835,6 +835,6 @@ function setAttrValue(node, attrMap) {
             }
         })
     }
-    
+
 }
 module.exports = AST;

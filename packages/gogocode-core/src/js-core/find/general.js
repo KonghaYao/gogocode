@@ -1,7 +1,7 @@
 const { isObject, hasOwn } = require('../../util')
 // 通过简单ast结构查找ast节点
 
-const recast = require('recast-yx');
+const recast = require('recast');
 const visit = recast.types.visit;
 const filterProps = require('../filter-prop.js');
 const generate = require('../generate')
@@ -61,7 +61,7 @@ function checkIsMatch(full, partial, extraData, strictSequence) {
                     // 例如 使用{ $_$: $_$ }匹配{ a() {} }
                     let fullProp = full[prop];
                     if (!fullProp && !Array.isArray(full)) {
-                        if (partial[prop] && typeof partial[prop].name == 'string' && 
+                        if (partial[prop] && typeof partial[prop].name == 'string' &&
                             (partial[prop].name.match(Expando) || partial[prop].name.match(new RegExp(Expando.slice(0, -1) + '\\$3')))
                         ) {
                             if (full.type == 'VariableDeclarator' && prop == 'init' && partial[prop].name.match(Expando)) {
@@ -73,7 +73,7 @@ function checkIsMatch(full, partial, extraData, strictSequence) {
                             } else {
                                 fullProp = full;
                             }
-                            
+
                         }
                     }
                     res =
@@ -101,7 +101,7 @@ function checkIsMatch(full, partial, extraData, strictSequence) {
                 };
                 const expandoKey = partial[prop].replace(Expando, '') || '0';
                 extraData[expandoKey] = extraData[expandoKey] || [];
-                
+
                 switch (full.type) {
                 case 'Identifier':
                     extra.value = full.name;
@@ -127,7 +127,7 @@ function checkIsMatch(full, partial, extraData, strictSequence) {
                 default:
                     try {
                         extra.value = generate(full);
-                    } catch(e) {
+                    } catch (e) {
                         if (full[prop]) {
                             extra.value = full[prop];
                         } else {
@@ -161,7 +161,7 @@ function find$$$(partial, full, extraData, strictSequence) {
             if (value && value.match && value.match(new RegExp(Expando.slice(0, -1) + '\\$3'))) {
                 key$$$ = value.replace(new RegExp(Expando.slice(0, -1) + '\\$3'), '') || '$'
                 index$$$ = i;
-          
+
                 break;
             }
         }
@@ -175,7 +175,7 @@ function find$$$(partial, full, extraData, strictSequence) {
             return;
         }
         let fi = 0;
-        while(extraNodeList[fi]) {
+        while (extraNodeList[fi]) {
             if (checkIsMatch(extraNodeList[fi], p, {}, strictSequence)) {
                 extraNodeList.splice(fi, 1);
             } else {
@@ -186,7 +186,7 @@ function find$$$(partial, full, extraData, strictSequence) {
     extraData[`$$$${key$$$}`] = (extraData[`$$$${key$$$}`] || []).concat(extraNodeList);
     return true;
 }
- 
+
 function find(nodeType, structure, strictSequence, deep = 'nn', expando = 'g123o456g789o') {
     const nodePathList = [];
     const matchWildCardList = [];
@@ -195,7 +195,7 @@ function find(nodeType, structure, strictSequence, deep = 'nn', expando = 'g123o
     visit(this, {
         [`visit${nodeType}`](path) {
             const extraData = {};
-            
+
             isMatch = checkIsMatch(
                 path.value,
                 structure,

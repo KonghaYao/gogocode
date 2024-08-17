@@ -1,6 +1,6 @@
 // 把简单的api转换成ast
 // todo await 
-const recast = require('recast-yx');
+const recast = require('recast');
 const parse = require('./parse');
 const visit = recast.types.visit;
 const filterProps = require('./filter-prop.js');
@@ -46,28 +46,28 @@ function getSelector(selectorCode, parseOptions, expando) {
                 filterProps(ast, selector.structure);
                 return selector;
             }
-            
+
         } else if (seletorAst.program.body[0] && seletorAst.program.body[0].type == 'LabeledStatement') {
             throw new Error('Missing semicolon')
         }
-    } catch(e) {
+    } catch (e) {
         // 可能是对象属性
         try {
             seletorAst = parse(`({${selectorCode}})`, parseOptions);
             seletorAst = seletorAst.program.body[0].expression.properties[0]
-        } catch(e) {
+        } catch (e) {
             seletorAst = null;
         }
-        
+
         // 可能是类属性
         let clsSelectorAst = null;
         try {
             clsSelectorAst = parse(`class a$_$ { ${selectorCode} }`, parseOptions)
             clsSelectorAst = clsSelectorAst.program.body[0].body.body[0]
-        } catch(e) {
+        } catch (e) {
             //
         }
-        
+
         const result = [seletorAst, clsSelectorAst]
             .filter(s => !!s)
             .map(sel => {
@@ -112,12 +112,12 @@ function getSelector(selectorCode, parseOptions, expando) {
         try {
             const selectorAstList = [selector]
             const classPropSelector = { nodeType: '', structure: {} };
-            const classPropSelectorAst = parse(`class A { ${selectorCode } }`, parseOptions).program.body[0].body.body[0]
+            const classPropSelectorAst = parse(`class A { ${selectorCode} }`, parseOptions).program.body[0].body.body[0]
             classPropSelector.nodeType = classPropSelectorAst.type;
             filterProps(classPropSelectorAst, classPropSelector.structure);
             selectorAstList.push(classPropSelector);
             return selectorAstList;
-        } catch(e) {
+        } catch (e) {
             //
         }
     } else if (selector.nodeType == 'MemberExpression') {
@@ -129,10 +129,10 @@ function getSelector(selectorCode, parseOptions, expando) {
             filterProps(classPropSelectorAst, classPropSelector.structure);
             selectorAstList.push(classPropSelector);
             return selectorAstList;
-        } catch(e) {
+        } catch (e) {
             // maybe selectorCode = this.xxx
         }
-        
+
     }
     return selector;
 }
