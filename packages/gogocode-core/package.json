@@ -1,6 +1,6 @@
 {
     "name": "go-better-code",
-    "version": "1.0.54",
+    "version": "1.1.0",
     "description": "The simplest tool to parse/transform/generate code on ast",
     "keywords": [
         "babel",
