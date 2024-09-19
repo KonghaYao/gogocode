@@ -22,6 +22,10 @@
     "main": "index.js",
     "browser": "umd/gogocode.js",
     "types": "types/index.d.ts",
+    "publishConfig": {
+        "registry": "https://registry.npmjs.org/",
+        "access": "public"
+    },
     "scripts": {
         "test": "jest --coverage",
         "build": "rollup -c",
