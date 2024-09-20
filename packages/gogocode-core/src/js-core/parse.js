@@ -32,7 +32,7 @@ module.exports = function (code, options) {
             ['@babel/plugin-syntax-decorators', 'decorators', { decoratorsBeforeExport: true }]
         ]);
     const parseOptions = {
-        // sourceType: 'module',
+        sourceType: 'unambiguous',
         allowHashBang: true,
         ecmaVersion: Infinity,
         allowImportExportEverywhere: true,
